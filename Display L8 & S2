@@ -1,0 +1,14 @@
+import ee
+from ee_plugin import Map
+
+LC08 = ee.ImageCollection('LANDSAT/LC08/C01/T1_TOA')\
+      .filterDate('2019-01-01', '2019-12-31').min()
+Map.setCenter(104.5, 13.5, 8)
+
+Map.addLayer(LC08, {"bands": ['B4', 'B3', 'B2'], "max": 0.3}, 'LC08 RGB')
+
+
+S2 = ee.ImageCollection('COPERNICUS/S2')\
+      .filterDate('2019-01-01', '2019-12-31').median()\
+      .divide(10000).visualize(**{'bands': ['B12', 'B8', 'B4'], 'min': 0.05, 'max': 0.5})
+Map.addLayer(S2, {}, 'Sentinel-2')
